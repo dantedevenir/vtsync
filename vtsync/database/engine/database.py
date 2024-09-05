@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import and_, create_engine, text
 from sqlalchemy.orm import sessionmaker
-from db.models.marketplace import History
+from models.history import History
 
 class Database:
     def __init__(self,database, user='root',passwd='',host='192.168.99.114',port=35432, type="postgresql", connector="psycopg"):
@@ -9,7 +9,7 @@ class Database:
         self.engine = create_engine(uri)
         self.session = sessionmaker(bind=self.engine)()
 
-    def doQuery(self, query):
+    """ def doQuery(self, query):
         with self.session.begin():
             result = self.session.execute(text(query)).fetchall()
             if result:
@@ -30,4 +30,4 @@ class Database:
                         self.session.add(new_record)
 
                 self.session.commit()
-                self.session.commit()
+                self.session.commit() """

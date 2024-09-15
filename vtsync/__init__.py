@@ -1,3 +1,4 @@
-__version__ = "0.0.1"
+from .api.webservice import WebService
+from .database.engine.database import Database
 
-from .api import WebService
+__all__ = ["WebService", "Database"]

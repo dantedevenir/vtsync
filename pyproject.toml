@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "vtsync"
-version = "0.1.0"
+version = "0.1.3"
 description = ""
 authors = ["WorkWithDante <dantedevenir@outlook.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.12.4"
-sqlalchemy = "2.0.31"
+python = "^3.12"
+sqlalchemy = "^2.0.31"
 
 [build-system]
 requires = ["poetry-core"]

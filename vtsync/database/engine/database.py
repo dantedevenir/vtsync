@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import and_, create_engine, text
 from sqlalchemy.orm import sessionmaker
-from models.history import History
+#from ..models.history import History
 
 class Database:
     def __init__(self,database, user='root',passwd='',host='192.168.99.114',port=35432, type="postgresql", connector="psycopg"):

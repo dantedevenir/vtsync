@@ -1,27 +1,41 @@
 from .webservice import WebService
 from datetime import datetime
+from json import dumps
 
 class Sync:
+    def __init__(self, host, user, token):
+        self.ws = WebService(host)
+        self.user_id = self.ws.doLogin(user, token)['userId'] 
+        salesOrderDescribe = self.ws.doDescribe('Contacts')
+        print(dumps({field['name']: field['label'] for field in salesOrderDescribe['fields']} , indent=4))
+        print(self.user_id)
+        
+    def get_contact_id(self, firstname, lastname, dob):
+        contact_exist, = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}' AND cf_790 = '{datetime.strptime(dob, '%m-%d-%Y').strftime('%Y-%m-%d')}'")
+        return contact_exist['id']
+
+        
+    def create_salesorder(self, contact_id):
+        contactExist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{basicDict.firstname['value']}' AND lastname = '{basicDict.lastname['value']}' AND cf_759 = '{datetime.strptime(basicDict.dob['value'], '%b %d %Y').strftime('%Y-%m-%d')}'")
+        
     def create(self, basicInfo, dependentInfo, payInfo, helpDeskInfo, sellInfo):
         basicDict = basicInfo
         dependentDict = [item for item in dependentInfo]
         helpDeskDict = [item for item in helpDeskInfo]
         payDict = payInfo
         sellDict = sellInfo
-        client = WebService('http://192.168.99.102/vtigercrm_2022/')
-        client.doLogin('superadmin', 'MFaeyxCMTmRrUZiE')
-        salesOrderDescribe = client.doDescribe('SalesOrder')
-        #contactDescribe = client.doDescribe('Contacts')
-        contactExist = client.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{basicDict.firstname['value']}' AND lastname = '{basicDict.lastname['value']}' AND cf_759 = '{datetime.strptime(basicDict.dob['value'], '%b %d %Y').strftime('%Y-%m-%d')}'")
+        salesOrderDescribe = self.ws.doDescribe('SalesOrder')
+        #contactDescribe = self.ws.doDescribe('Contacts')
+        contactExist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{basicDict.firstname['value']}' AND lastname = '{basicDict.lastname['value']}' AND cf_759 = '{datetime.strptime(basicDict.dob['value'], '%b %d %Y').strftime('%Y-%m-%d')}'")
         if len(contactExist) == 0:
             contactData = self.getContactData(basicDict, payDict)
             contactData = {key: value for key, value in contactData.items() if value != ''}
-            contact = client.doCreate('Contacts', contactData)
+            contact = self.ws.doCreate('Contacts', contactData)
             if contact != False:
                 if len(contact) > 0:
                     salesOrderData = self.getSalesOrderData(basicDict, dependentDict, payDict, contact['id'])
                     #salesOrderData = {key: value for key, value in salesOrderData.items() if value != ''}
-                    salesOrder = client.doCreate('SalesOrder', salesOrderData)
+                    salesOrder = self.ws.doCreate('SalesOrder', salesOrderData)
                     helpDeskDict.append({
                         'status': 'Open',
                         'title': 'INSCRIPCIÓN INICIAL',
@@ -39,11 +53,11 @@ class Sync:
                     })
                     for helpDesk in helpDeskDict:
                         helpDeskData = self.getHelpDeskData(helpDesk, contact['id'], payDict.company['value'])
-                        helpDesk = client.doCreate('HelpDesk', helpDeskData)
+                        helpDesk = self.ws.doCreate('HelpDesk', helpDeskData)
                     #return "X ERROR")
                     return "ok"
         else:
-            return f"Ya existe el cliente {basicDict.firstname['value']} {basicDict.lastname['value']} con el código {contactExist[0]['id']}"
+            return f"Ya existe el self.wse {basicDict.firstname['value']} {basicDict.lastname['value']} con el código {contactExist[0]['id']}"
         
     def getHelpDeskData(self, helpDesk, contactID, company) -> dict:
         return {

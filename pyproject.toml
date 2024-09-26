@@ -5,8 +5,7 @@ description = ""
 authors = ["WorkWithDante <dantedevenir@outlook.com>"]
 readme = "README.md"
 packages = [
-        {include = "api", from = "vtsync"},
-
+    {include = "api", from = "vtsync/base"},
 ]
 
 [tool.poetry.dependencies]

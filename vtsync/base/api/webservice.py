@@ -20,6 +20,7 @@ import json, urllib
 import urllib.parse
 import urllib.request
 import hashlib
+import ssl
 
 # Vtiger Webservice Client
 class WebService:
@@ -59,7 +60,8 @@ class WebService:
     def __doGet(self, url, parameters=False, tojson=True):
         if not parameters: parameters = {}
         useurl = (url + '?' + urllib.parse.urlencode(parameters))
-        connection = urllib.request.urlopen(useurl)
+        context = ssl._create_unverified_context()
+        connection = urllib.request.urlopen(useurl, context=context)
         response = connection.read()
         if tojson == True: response = json.loads(response)
         return response
@@ -74,7 +76,8 @@ class WebService:
         if not parameters: parameters = {}
         data = urllib.parse.urlencode(parameters).encode()
         req =  urllib.request.Request(url, data=data)
-        connection = urllib.request.urlopen(req)
+        context = ssl._create_unverified_context()
+        connection = urllib.request.urlopen(req, context=context)
         response = connection.read()
         if tojson == True: response = self.toJSON(response)
         return response
@@ -166,8 +169,9 @@ class WebService:
             self._servicekey  = accesskey
             self._sessionid   = result['sessionName']
             self._userid      = result['userId']
-            return True
-        return False
+            return result
+        else:
+            return {False}
 
     '''
     Perform ListTypes operation

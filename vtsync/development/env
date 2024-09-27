@@ -1,0 +1,3 @@
+mysql_user=vtigercrm   #repalce with your choice of username
+mysql_pass=123  #repalce with your choice of password
+host_port=8080  #you can use host port of you choicex

@@ -7,16 +7,18 @@ class Sync:
         self.ws = WebService(host)
         self.user_id = self.ws.doLogin(user, token)['userId'] 
         salesOrderDescribe = self.ws.doDescribe('Contacts')
-        print(dumps({field['name']: field['label'] for field in salesOrderDescribe['fields']} , indent=4))
         print(self.user_id)
         
     def get_contact_id(self, firstname, lastname, dob):
         contact_exist, = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}' AND cf_790 = '{datetime.strptime(dob, '%m-%d-%Y').strftime('%Y-%m-%d')}'")
         return contact_exist['id']
 
+    def create_contact(self, contact_data):
+        contact_id = self.ws.doCreate('Contacts', contact_data)
         
-    def create_salesorder(self, contact_id):
-        contactExist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{basicDict.firstname['value']}' AND lastname = '{basicDict.lastname['value']}' AND cf_759 = '{datetime.strptime(basicDict.dob['value'], '%b %d %Y').strftime('%Y-%m-%d')}'")
+    def create_salesorder(self, salesorder_data):
+        salesOrder_id, = self.ws.doCreate('SalesOrder', salesorder_data)
+        
         
     def create(self, basicInfo, dependentInfo, payInfo, helpDeskInfo, sellInfo):
         basicDict = basicInfo

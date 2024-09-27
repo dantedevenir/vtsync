@@ -79,6 +79,7 @@ class WebService:
         context = ssl._create_unverified_context()
         connection = urllib.request.urlopen(req, context=context)
         response = connection.read()
+        print(response)
         if tojson == True: response = self.toJSON(response)
         return response
 
@@ -267,7 +268,7 @@ class WebService:
             'elementType' : module,
             'element'     : self.toJSONString({key: value for key, value in valuemap.items() if str(value) != 'nan'})
         }
-
+        print(parameters)
         response = self.__doPost(self._serviceurl, parameters)
         if self.hasError(response): return False
         result = response['result']

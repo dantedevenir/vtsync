@@ -8,16 +8,41 @@ class Sync:
         self.user_id = self.ws.doLogin(user, token)['userId'] 
         salesOrderDescribe = self.ws.doDescribe('Contacts')
         print(self.user_id)
+    
+    def search(self, module, condition):
+        condition_sql = " AND ".join([f"{key} = '{value}'" for key, value in condition.items()])
+        i = 0
+        result = []
+        while(True):
+            query_request = f"SELECT * FROM {module} WHERE {condition_sql} LIMIT {i}, {i + 100}"
+            print(query_request)
+            query_result = self.ws.doQuery(query_request)
+            i += 100
+            result.extend(query_result)
+            if len(query_result) < 100:
+                break
         
+        return result
+            
+            
     def get_contact_id(self, firstname, lastname, dob):
-        contact_exist, = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}' AND cf_790 = '{datetime.strptime(dob, '%m-%d-%Y').strftime('%Y-%m-%d')}'")
-        return contact_exist['id']
+        # contact_exist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}' AND cf_790 = '{datetime.strptime(dob, '%m-%d-%Y').strftime('%Y-%m-%d')}'")
+        contact_exist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}'")
+        return contact_exist[0]['id']
+    
+    def get_salesorder_id(self, subject):
+        # contact_exist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}' AND cf_790 = '{datetime.strptime(dob, '%m-%d-%Y').strftime('%Y-%m-%d')}'")
+        salesorder_exist = self.ws.doQuery(f"SELECT * FROM SalesOrder WHERE subject = '{subject}'")
+        print(salesorder_exist)
+        return salesorder_exist[0]['id']
 
     def create_contact(self, contact_data):
         contact_id = self.ws.doCreate('Contacts', contact_data)
+        return contact_id['id']
         
     def create_salesorder(self, salesorder_data):
-        salesOrder_id, = self.ws.doCreate('SalesOrder', salesorder_data)
+        salesOrder_id = self.ws.doCreate('SalesOrder', salesorder_data)
+        return salesOrder_id['id']
         
         
     def create(self, basicInfo, dependentInfo, payInfo, helpDeskInfo, sellInfo):

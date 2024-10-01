@@ -211,6 +211,7 @@ class WebService:
             'query'       : query
         }
         response = self.__doGet(self._serviceurl, parameters)
+        print(response)
         if self.hasError(response): return []
         result = response['result']
         return result
@@ -256,23 +257,30 @@ class WebService:
     '''
     Perform create operation on the module.
     '''
+    import json
+
     def doCreate(self, module, valuemap):
-        if not self.__checkLogin(): return False
+        if not self.__checkLogin():
+            return False
 
         if 'assigned_user_id' not in valuemap:
             valuemap['assigned_user_id'] = self._userid
 
         parameters = {
-            'operation'   : 'create',
-            'sessionName' : self._sessionid,
-            'elementType' : module,
-            'element'     : self.toJSONString({key: value for key, value in valuemap.items() if str(value) != 'nan'})
+            'operation': 'create',
+            'sessionName': self._sessionid,
+            'elementType': module,
+            'element': json.dumps({key: value for key, value in valuemap.items() if str(value) != 'nan'})
         }
+
         print(parameters)
         response = self.__doPost(self._serviceurl, parameters)
-        if self.hasError(response): return False
+        if self.hasError(response):
+            return False
+
         result = response['result']
         return result
+
     
     def doUpdate(self, valuemap):
         if not self.__checkLogin(): return False

@@ -23,7 +23,21 @@ class Sync:
         
         return result
             
-            
+    def get_contact_from_id(self, id):
+        # contact_exist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}' AND cf_790 = '{datetime.strptime(dob, '%m-%d-%Y').strftime('%Y-%m-%d')}'")
+        contact_exist = self.ws.doQuery(f"SELECT firstname, cf_1895, lastname, cf_763, cf_759, cf_771, cf_819, cf_827, cf_815 FROM Contacts WHERE id = '{id}'")
+        return {
+            'firstname': contact_exist[0]['firstname'],
+            'middlename': contact_exist[0]['cf_1895'],
+            'lastname': contact_exist[0]['lastname'],
+            'ssn': contact_exist[0]['cf_763'],
+            'dob': contact_exist[0]['cf_759'],
+            'gender': contact_exist[0]['cf_771'],
+            'phone_1': contact_exist[0]['cf_819'],
+            'phone_2': contact_exist[0]['cf_827'],
+            'email': contact_exist[0]['cf_815'],
+        }
+    
     def get_contact_id(self, firstname, lastname, dob):
         # contact_exist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}' AND cf_790 = '{datetime.strptime(dob, '%m-%d-%Y').strftime('%Y-%m-%d')}'")
         contact_exist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}'")

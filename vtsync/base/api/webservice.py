@@ -79,7 +79,6 @@ class WebService:
         context = ssl._create_unverified_context()
         connection = urllib.request.urlopen(req, context=context)
         response = connection.read()
-        print(response)
         if tojson == True: response = self.toJSON(response)
         return response
 
@@ -211,7 +210,6 @@ class WebService:
             'query'       : query
         }
         response = self.__doGet(self._serviceurl, parameters)
-        print(response)
         if self.hasError(response): return []
         result = response['result']
         return result

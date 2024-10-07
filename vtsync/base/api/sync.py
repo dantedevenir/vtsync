@@ -15,7 +15,6 @@ class Sync:
         result = []
         while(True):
             query_request = f"SELECT * FROM {module} WHERE {condition_sql} LIMIT {i}, {i + 100}"
-            print(query_request)
             query_result = self.ws.doQuery(query_request)
             i += 100
             result.extend(query_result)

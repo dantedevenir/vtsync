@@ -25,7 +25,7 @@ class Sync:
             
     def get_contact_from_id(self, id):
         # contact_exist = self.ws.doQuery(f"SELECT id FROM Contacts WHERE firstname = '{firstname}' AND lastname = '{lastname}' AND cf_790 = '{datetime.strptime(dob, '%m-%d-%Y').strftime('%Y-%m-%d')}'")
-        contact_exist = self.ws.doQuery(f"SELECT firstname, cf_1895, lastname, cf_763, cf_759, cf_771, cf_819, cf_827, cf_815 FROM Contacts WHERE id = '{id}'")
+        contact_exist = self.ws.doQuery(f"SELECT firstname, cf_1895, lastname, cf_763, cf_759, cf_771, cf_819, cf_827, cf_815, cf_757, cf_1989, cf_775, cf_2103 FROM Contacts WHERE id = '{id}'")
         return {
             'firstname': contact_exist[0]['firstname'],
             'middlename': contact_exist[0]['cf_1895'],
@@ -36,6 +36,11 @@ class Sync:
             'phone_1': contact_exist[0]['cf_819'],
             'phone_2': contact_exist[0]['cf_827'],
             'email': contact_exist[0]['cf_815'],
+            'document': contact_exist[0]['cf_757'],
+            'apply': True if contact_exist[0]['cf_1989'] == "OBAMACARE" else False,
+            'smoke': False if contact_exist[0]['cf_775'] == "NOT" else True,
+            'pregnant': True if contact_exist[0]['cf_2103'] == "NOT" else False,
+            'relationship': 'Owner',
         }
     
     def get_contact_id(self, firstname, lastname, dob):

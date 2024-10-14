@@ -62,7 +62,6 @@ class Sync:
         salesOrder_id = self.ws.doCreate('SalesOrder', salesorder_data)
         return salesOrder_id['id']
         
-        
     def create(self, basicInfo, dependentInfo, payInfo, helpDeskInfo, sellInfo):
         basicDict = basicInfo
         dependentDict = [item for item in dependentInfo]
